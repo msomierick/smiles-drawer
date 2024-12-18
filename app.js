@@ -1,164 +1,221 @@
-//@ts-check
-const Drawer = require('./src/Drawer')
-const Parser = require('./src/Parser')
-const ReactionParser = require('./src/ReactionParser')
-const SvgDrawer = require('./src/SvgDrawer')
-const ReactionDrawer = require('./src/ReactionDrawer')
-const SmiDrawer = require('./src/SmilesDrawer')
-const GaussDrawer = require('./src/GaussDrawer')
+const Drawer = require("./src/Drawer");
+const Parser = require("./src/Parser");
+const ReactionParser = require("./src/ReactionParser");
+const SvgDrawer = require("./src/SvgDrawer");
+const ReactionDrawer = require("./src/ReactionDrawer");
+const SmiDrawer = require("./src/SmilesDrawer");
+const GaussDrawer = require("./src/GaussDrawer");
 
-// Detect SSR (server side rendering)
-var canUseDOM = !!(
-  (typeof window !== 'undefined' &&
-    window.document && window.document.createElement)
-);
+const canUseDOM =
+  typeof window !== "undefined" &&
+  window.document &&
+  window.document.createElement;
 
-/**
- * The SmilesDrawer namespace.
- * @typicalname SmilesDrawer
- */
-var SmilesDrawer = {
-  Version: '1.0.0'
-};
+const SmilesDrawer = {
+  Version: "1.0.0",
+  Drawer,
+  Parser,
+  SvgDrawer,
+  ReactionDrawer,
+  ReactionParser,
+  GaussDrawer,
 
-SmilesDrawer.Drawer = Drawer;
-SmilesDrawer.Parser = Parser;
-SmilesDrawer.SvgDrawer = SvgDrawer;
+  clean(smiles) {
+    return smiles.replace(/[^A-Za-z0-9@.+-?!()[\]{}\/\\=#$:*]/g, "");
+  },
 
-SmilesDrawer.ReactionDrawer = ReactionDrawer;
-SmilesDrawer.ReactionParser = ReactionParser;
-SmilesDrawer.GaussDrawer = GaussDrawer;
+  apply(
+    options,
+    selector = "canvas[data-smiles]",
+    themeName = "light",
+    onError = null
+  ) {
+    const smilesDrawer = new Drawer(options);
+    const elements = document.querySelectorAll(selector);
 
-/**
-* Cleans a SMILES string (removes non-valid characters)
-*
-* @static
-* @param {String} smiles A SMILES string.
-* @returns {String} The clean SMILES string.
-*/
-SmilesDrawer.clean = function (smiles) {
-  return smiles.replace(/[^A-Za-z0-9@\.\+\-\?!\(\)\[\]\{\}/\\=#\$:\*]/g, '');
-}
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      this.parse(
+        element.getAttribute("data-smiles"),
+        (tree) => {
+          smilesDrawer.draw(tree, element, themeName, false);
+        },
+        (err) => {
+          if (onError) {
+            onError(err);
+          }
+        }
+      );
+    }
+  },
 
-/**
-* Applies the smiles drawer draw function to each canvas element that has a smiles string in the data-smiles attribute.
-*
-* @static
-* @param {Object} options SmilesDrawer options.
-* @param {String} [selector='canvas[data-smiles]'] Selectors for the draw areas (canvas elements).
-* @param {String} [themeName='light'] The theme to apply.
-* @param {Function} [onError='null'] A callback function providing an error object.
-*/
-SmilesDrawer.apply = function (options, selector = 'canvas[data-smiles]', themeName = 'light', onError = null) {
-  let smilesDrawer = new Drawer(options);
-  let elements = document.querySelectorAll(selector);
-
-  for (var i = 0; i < elements.length; i++) {
-    let element = elements[i];
-
-    SmilesDrawer.parse(element.getAttribute('data-smiles'), function (tree) {
-      smilesDrawer.draw(tree, element, themeName, false);
-    }, function (err) {
-      if (onError) {
-        onError(err);
+  parse(smiles, successCallback, errorCallback) {
+    try {
+      if (successCallback) {
+        successCallback(Parser.parse(smiles));
       }
-    });
-  }
-}
+    } catch (err) {
+      if (errorCallback) {
+        errorCallback(err);
+      }
+    }
+  },
 
-/**
-* Parses the entered smiles string.
-* 
-* @static
-* @param {String} smiles A SMILES string.
-* @param {Function} successCallback A callback that is called on success with the parse tree.
-* @param {Function} errorCallback A callback that is called with the error object on error.
-*/
-SmilesDrawer.parse = function (smiles, successCallback, errorCallback) {
-  try {
-    if (successCallback) {
-      successCallback(Parser.parse(smiles));
+  parseReaction(reactionSmiles, successCallback, errorCallback) {
+    try {
+      if (successCallback) {
+        successCallback(ReactionParser.parse(reactionSmiles));
+      }
+    } catch (err) {
+      if (errorCallback) {
+        errorCallback(err);
+      }
     }
-  } catch (err) {
-    if (errorCallback) {
-      errorCallback(err);
-    }
-  }
-}
-
-/**
-* Parses the entered reaction smiles string.
-* 
-* @static
-* @param {String} reactionSmiles A reaction SMILES string.
-* @param {Function} successCallback A callback that is called on success with the parse tree.
-* @param {Function} errorCallback A callback that is called with the error object on error.
-*/
-SmilesDrawer.parseReaction = function (reactionSmiles, successCallback, errorCallback) {
-  try {
-    if (successCallback) {
-      successCallback(ReactionParser.parse(reactionSmiles));
-    }
-  } catch (err) {
-    if (errorCallback) {
-      errorCallback(err);
-    }
-  }
-}
+  },
+};
 
 if (canUseDOM) {
   window.SmilesDrawer = SmilesDrawer;
   window.SmiDrawer = SmiDrawer;
 }
 
-// Attach SmiDrawer to SmilesDrawer for npm imports
 SmilesDrawer.SmiDrawer = SmiDrawer;
 
-// There be dragons (polyfills)
-
 if (!Array.prototype.fill) {
-  Object.defineProperty(Array.prototype, 'fill', {
+  Object.defineProperty(Array.prototype, "fill", {
     value: function (value) {
-
-      // Steps 1-2.
       if (this == null) {
-        throw new TypeError('this is null or not defined');
+        throw new TypeError("this is null or not defined");
       }
 
-      var O = Object(this);
+      const O = Object(this);
+      const len = O.length >>> 0;
+      const start = arguments[1];
+      const relativeStart = start >> 0;
+      const k =
+        relativeStart < 0
+          ? Math.max(len + relativeStart, 0)
+          : Math.min(relativeStart, len);
 
-      // Steps 3-5.
-      var len = O.length >>> 0;
+      const end = arguments[2];
+      const relativeEnd = end === undefined ? len : end >> 0;
 
-      // Steps 6-7.
-      var start = arguments[1];
-      var relativeStart = start >> 0;
+      const final =
+        relativeEnd < 0
+          ? Math.max(len + relativeEnd, 0)
+          : Math.min(relativeEnd, len);
 
-      // Step 8.
-      var k = relativeStart < 0 ?
-        Math.max(len + relativeStart, 0) :
-        Math.min(relativeStart, len);
-
-      // Steps 9-10.
-      var end = arguments[2];
-      var relativeEnd = end === undefined ?
-        len : end >> 0;
-
-      // Step 11.
-      var final = relativeEnd < 0 ?
-        Math.max(len + relativeEnd, 0) :
-        Math.min(relativeEnd, len);
-
-      // Step 12.
       while (k < final) {
         O[k] = value;
         k++;
       }
 
-      // Step 13.
       return O;
-    }
+    },
   });
 }
+
+const input = document.getElementById("input");
+const debugCheckbox = document.getElementById("debug");
+const bondThicknessInput = document.getElementById("bondThickness");
+const textSizeInput = document.getElementById("textSize");
+const bondLengthInput = document.getElementById("bondLength");
+const shortBondLengthInput = document.getElementById("shortBondLength");
+const bondSpacingInput = document.getElementById("bondSpacing");
+const sizeInput = document.getElementById("size");
+const overlapInput = document.getElementById("overlap");
+
+const options = {
+  debug: false,
+  atomVisualization: "default",
+};
+
+const smilesDrawer = new SmilesDrawer.Drawer(options);
+const log = document.getElementById("log");
+
+function draw() {
+  const t = performance.now();
+  SmilesDrawer.parse(
+    input.value,
+    (tree) => {
+      smilesDrawer.draw(tree, "output-canvas", "dark", false);
+      const td = performance.now() - t;
+      log.innerHTML = "&nbsp;";
+      log.style.visibility = "hidden";
+
+      new Noty({
+        text: `Drawing took ${td.toFixed(
+          3
+        )}ms with a total overlap score of ${smilesDrawer
+          .getTotalOverlapScore()
+          .toFixed(3)}.`,
+        killer: true,
+        timeout: 2000,
+        animation: {
+          open: null,
+          close: null,
+        },
+      }).show();
+
+      console.log(smilesDrawer.getMolecularFormula());
+    },
+    (err) => {
+      log.innerHTML = err;
+      log.style.visibility = "visible";
+      console.log(err);
+    }
+  );
+}
+
+function updateOptions() {
+  const updatedDrawer = new SmilesDrawer.Drawer(options);
+  draw();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  input.addEventListener("input", draw);
+
+  debugCheckbox.addEventListener("click", () => {
+    options.debug = debugCheckbox.checked;
+    updateOptions();
+  });
+
+  textSizeInput.addEventListener("input", () => {
+    options.fontSizeLarge = parseInt(textSizeInput.value);
+    options.fontSizeSmall = (3 / 5) * options.fontSizeLarge;
+    updateOptions();
+  });
+
+  bondThicknessInput.addEventListener("input", () => {
+    options.bondThickness = parseFloat(bondThicknessInput.value);
+    updateOptions();
+  });
+
+  bondLengthInput.addEventListener("input", () => {
+    options.bondLength = parseInt(bondLengthInput.value);
+    updateOptions();
+  });
+
+  shortBondLengthInput.addEventListener("input", () => {
+    options.shortBondLength = parseInt(shortBondLengthInput.value) / 100;
+    updateOptions();
+  });
+
+  bondSpacingInput.addEventListener("input", () => {
+    options.bondSpacing = parseInt(bondSpacingInput.value);
+    updateOptions();
+  });
+
+  sizeInput.addEventListener("input", () => {
+    options.width = parseInt(sizeInput.value);
+    options.height = parseInt(sizeInput.value);
+    updateOptions();
+  });
+
+  overlapInput.addEventListener("input", () => {
+    options.overlapResolutionIterations = parseInt(overlapInput.value);
+    updateOptions();
+  });
+});
 
 module.exports = SmilesDrawer;
