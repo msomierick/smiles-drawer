@@ -17,7 +17,7 @@ module.exports = (env, argv) => {
     devServer: {
       static: path.join(__dirname, "dist"),
       historyApiFallback: true,
-      compress: true, 
+      compress: true,
       port: 7020,
     },
     devtool: isProduction ? "source-map" : "inline-source-map",
@@ -52,9 +52,14 @@ module.exports = (env, argv) => {
             },
           },
         },
+        {
+          test: /\.ts?$/,
+          use: "ts-loader",
+          exclude: /node_modules/,
+        },
       ],
     },
-    resolve: { extensions: [".js"] },
+    resolve: { extensions: [".tsx", ".ts", ".js"] },
     optimization: {
       minimize: isProduction,
       minimizer: [
