@@ -5,12 +5,11 @@ import { ArrayHelper } from "./ArrayHelper";
 import { Vector2 } from "./Vector2";
 import { Line } from "./Line";
 import { ThemeManager } from "./ThemeManager";
+import { SvgWrapper } from "./SvgWrapper";
+import { GaussDrawer } from "./GaussDrawer";
+import { DrawerBase } from "./DrawerBase";
 
-const DrawerBase = require("./DrawerBase");
-const SvgWrapper = require("./SvgWrapper");
-const GaussDrawer = require("./GaussDrawer");
-
-class SvgDrawer {
+export class SvgDrawer {
   constructor(options, clear = true) {
     this.preprocessor = new DrawerBase(options);
     this.opts = this.preprocessor.opts;
@@ -603,5 +602,3 @@ class SvgDrawer {
     normals[1].multiplyScalar(spacing);
   }
 }
-
-module.exports = SvgDrawer;

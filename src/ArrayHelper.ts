@@ -393,7 +393,7 @@ export class ArrayHelper {
       const item = arr[i];
 
       if (item instanceof Array) {
-        newArr[i] = ArrayHelper.deepCopy(item);
+        newArr[i] = ArrayHelper.deepCopy(item) as T;
       } else {
         newArr[i] = item;
       }

@@ -366,7 +366,7 @@ export class Vertex {
   getNextInRing(
     vertices: Vertex[],
     ringId: number,
-    previousVertexId: number
+    previousVertexId: number | undefined
   ): number | null {
     let neighbours = this.getNeighbours();
 

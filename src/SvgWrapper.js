@@ -13,7 +13,7 @@ function makeid(length) {
   return result;
 }
 
-class SvgWrapper {
+export class SvgWrapper {
   constructor(themeManager, target, options, clear = true) {
     if (typeof target === "string" || target instanceof String) {
       this.svg = document.getElementById(target);
@@ -1136,5 +1136,3 @@ class SvgWrapper {
     return { svg: svg, width: maxLineWidth, height: totalHeight };
   }
 }
-
-module.exports = SvgWrapper;

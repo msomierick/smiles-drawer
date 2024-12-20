@@ -1,12 +1,11 @@
 import { ReactionParser } from "./ReactionParser";
 import * as Parser from "./Parser";
+import { Options } from "./Options";
+import { SvgWrapper } from "./SvgWrapper";
+import { SvgDrawer } from "./SvgDrawer";
+import { ReactionDrawer } from "./ReactionDrawer";
 
-const SvgDrawer = require("./SvgDrawer");
-const ReactionDrawer = require("./ReactionDrawer");
-const SvgWrapper = require("./SvgWrapper");
-const Options = require("./Options");
-
-class SmilesDrawer {
+export class SmilesDrawer {
   constructor(moleculeOptions = {}, reactionOptions = {}) {
     this.drawer = new SvgDrawer(moleculeOptions);
 
@@ -453,5 +452,3 @@ class SmilesDrawer {
     return { w: w, h: h };
   }
 }
-
-module.exports = SmilesDrawer;

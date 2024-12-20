@@ -9,11 +9,9 @@ import { ThemeManager } from "./ThemeManager";
 import { Ring } from "./Ring";
 import { RingConnection } from "./RingConnection";
 import { Graph } from "./Graph";
-
-const CanvasWrapper = require("./CanvasWrapper");
-const Graph = require("./Graph");
-const SSSR = require("./SSSR");
-const Options = require("./Options");
+import { CanvasWrapper } from "./CanvasWrapper";
+import { Options } from "./Options";
+import { SSSR } from "./SSSR";
 
 /**
  * The main class of the application representing the smiles drawer
@@ -27,7 +25,7 @@ const Options = require("./Options");
  * @property {Object} opts The merged options.
  * @property {Object} theme The current theme.
  */
-class DrawerBase {
+export class DrawerBase {
   /**
    * The constructor for the class SmilesDrawer.
    *
@@ -3661,5 +3659,3 @@ class DrawerBase {
     }
   }
 }
-
-module.exports = DrawerBase;

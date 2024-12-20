@@ -5,7 +5,7 @@ const chroma = require("chroma-js");
 
 type ColorMapType = string[] | null;
 
-class GaussDrawer {
+export class GaussDrawer {
   private points: Vector2[];
   private weights: number[];
   private width: number;
@@ -76,7 +76,7 @@ class GaussDrawer {
   ): void {
     this.points = [];
     arr_points.forEach((a) => {
-      this.points.push({ x: a[0], y: a[1] });
+      this.points.push(new Vector2(a[0], a[1]));
     });
 
     this.weights = [];
@@ -147,7 +147,7 @@ class GaussDrawer {
         }
 
         const [r, g, b] = scale(m[x][y]).rgb();
-        this.setPixel({ x, y }, r, g, b);
+        this.setPixel(new Vector2(x, y), r, g, b);
       }
     }
   }
@@ -170,7 +170,7 @@ class GaussDrawer {
 
     image.onerror = function (err: ErrorEvent) {
       console.log(err);
-    };
+    } as OnErrorEventHandler;
 
     image.src = this.canvas.toDataURL();
   }
@@ -180,7 +180,7 @@ class GaussDrawer {
    *
    * @returns {string} The SVG representation of the canvas
    */
-  public getSVG(): string {
+  public getSVG(): SVGElement | null {
     return convertImage(
       this.context.getImageData(0, 0, this.width, this.height)
     );

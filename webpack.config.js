@@ -6,7 +6,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
 
   return {
-    entry: "./app.js",
+    entry: "./src/app.js",
     mode: argv.mode === "production" ? "production" : "development",
     output: {
       filename: isProduction ? "smiles-drawer.min.js" : "smiles-drawer.js",

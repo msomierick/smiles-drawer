@@ -115,15 +115,15 @@ export function convertImage(img: {
       let curPath: [number, number] | undefined;
       let w = 1;
 
-      each(values, function () {
-        if (curPath && this[1] === curPath[1] && this[0] === curPath[0] + w) {
+      each(values, function (index, val) {
+        if (curPath && val[1] === curPath[1] && val[0] === curPath[0] + w) {
           w++;
         } else {
           if (curPath) {
             paths.push(makePathData(curPath[0], curPath[1], w));
             w = 1;
           }
-          curPath = this as [number, number];
+          curPath = val as [number, number];
         }
       });
 

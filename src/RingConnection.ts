@@ -11,8 +11,8 @@ import { Ring } from "./Ring";
  */
 export class RingConnection {
   public id: number | null;
-  private firstRingId: number;
-  private secondRingId: number;
+  private firstRingId: number | null;;
+  private secondRingId: number | null;;
   private vertices: Set<number>;
 
   /**
@@ -138,8 +138,8 @@ export class RingConnection {
   static getNeighbours(
     ringConnections: RingConnection[],
     ringId: number
-  ): number[] {
-    let neighbours: number[] = [];
+  ): (number | null)[] {
+    let neighbours: (number | null)[] = [];
 
     for (let i = 0; i < ringConnections.length; i++) {
       let ringConnection = ringConnections[i];
@@ -179,6 +179,6 @@ export class RingConnection {
         return [...ringConnection.vertices];
       }
     }
-    return []; // Added return for TypeScript strict mode
+    return [];
   }
 }

@@ -1,5 +1,4 @@
-//@ts-check
-const SvgDrawer = require("./SvgDrawer");
+import { SvgDrawer } from "./SvgDrawer";
 
 /**
  * The main class of the application representing the smiles drawer
@@ -13,13 +12,15 @@ const SvgDrawer = require("./SvgDrawer");
  * @property {Object} opts The merged options.
  * @property {Object} theme The current theme.
  */
-class Drawer {
+export class Drawer {
+  svgDrawer: SvgDrawer;
+
   /**
    * The constructor for the class SmilesDrawer.
    *
    * @param {Object} options An object containing custom values for different options. It is merged with the default options.
    */
-  constructor(options) {
+  constructor(options: any) {
     this.svgDrawer = new SvgDrawer(options);
   }
 
@@ -32,20 +33,20 @@ class Drawer {
    * @param {Boolean} infoOnly=false Only output info on the molecule without drawing anything to the canvas.
    */
   draw(
-    data,
-    target,
-    themeName = "light",
-    infoOnly = false,
-    highlight_atoms = []
+    data: any,
+    target: string | HTMLCanvasElement,
+    themeName: string = "light",
+    infoOnly: boolean = false,
+    highlight_atoms: Array<number> = []
   ) {
-    let canvas = null;
+    let canvas: HTMLCanvasElement | null = null;
     if (typeof target === "string" || target instanceof String) {
-      canvas = document.getElementById(target);
+      canvas = document.getElementById(target as string) as HTMLCanvasElement;
     } else {
       canvas = target;
     }
 
-    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg: SVGSVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     svg.setAttributeNS(
       null,
@@ -54,8 +55,8 @@ class Drawer {
     );
     svg.setAttributeNS(null, "width", this.svgDrawer.opts.width + "");
     svg.setAttributeNS(null, "height", this.svgDrawer.opts.height + "");
-    this.svgDrawer.draw(data, svg, themeName, null, infoOnly, highlight_atoms);
-    this.svgDrawer.svgWrapper.toCanvas(
+    this.svgDrawer.draw(data, svg, themeName, undefined, infoOnly, highlight_atoms); // Added null for theme, it's not defined in this method.
+    this.svgDrawer.svgWrapper?.toCanvas(
       canvas,
       this.svgDrawer.opts.width,
       this.svgDrawer.opts.height
@@ -67,7 +68,7 @@ class Drawer {
    *
    * @returns {Number} The overlap score.
    */
-  getTotalOverlapScore() {
+  getTotalOverlapScore(): number {
     return this.svgDrawer.getTotalOverlapScore();
   }
 
@@ -76,9 +77,7 @@ class Drawer {
    *
    * @returns {String} The molecular formula.
    */
-  getMolecularFormula() {
-    this.svgDrawer.getMolecularFormula();
+  getMolecularFormula(): string {
+    return this.svgDrawer.getMolecularFormula();
   }
 }
-
-module.exports = Drawer;

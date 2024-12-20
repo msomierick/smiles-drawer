@@ -19,7 +19,7 @@ import { Ring } from "./Ring";
  * @property {Number} fontLarge The large font size in pt.
  * @property {Number} fontSmall The small font size in pt.
  */
-class CanvasWrapper {
+export class CanvasWrapper {
   /**
    * The constructor for the class CanvasWrapper.
    *
@@ -1028,5 +1028,3 @@ class CanvasWrapper {
     this.ctx.clearRect(0, 0, this.canvas.offsetWidth, this.canvas.offsetHeight);
   }
 }
-
-module.exports = CanvasWrapper;

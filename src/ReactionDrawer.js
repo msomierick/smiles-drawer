@@ -1,11 +1,10 @@
 import { formulaToCommonName } from "./FormulaToCommonName";
 import { ThemeManager } from "./ThemeManager";
+import { Options } from "./Options";
+import { SvgWrapper } from "./SvgWrapper";
+import { SvgDrawer } from "./SvgDrawer";
 
-const SvgDrawer = require("./SvgDrawer");
-const SvgWrapper = require("./SvgWrapper");
-const Options = require("./Options");
-
-class ReactionDrawer {
+export class ReactionDrawer {
   /**
    * The constructor for the class ReactionDrawer.
    *
@@ -468,5 +467,3 @@ class ReactionDrawer {
     return svg;
   }
 }
-
-module.exports = ReactionDrawer;
