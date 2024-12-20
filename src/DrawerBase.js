@@ -1,17 +1,18 @@
-//@ts-check
-const MathHelper = require("./MathHelper");
-const ArrayHelper = require("./ArrayHelper");
-const Vector2 = require("./Vector2");
-const Line = require("./Line");
-const Vertex = require("./Vertex");
-const Edge = require("./Edge");
-const Atom = require("./Atom");
-const Ring = require("./Ring");
-const RingConnection = require("./RingConnection");
+import { Atom } from "./Atom";
+import { ArrayHelper } from "./ArrayHelper";
+import { Vector2 } from "./Vector2";
+import { MathHelper } from "./MathHelper";
+import { Line } from "./Line";
+import { Edge } from "./Edge";
+import { Vertex } from "./Vertex";
+import { ThemeManager } from "./ThemeManager";
+import { Ring } from "./Ring";
+import { RingConnection } from "./RingConnection";
+import { Graph } from "./Graph";
+
 const CanvasWrapper = require("./CanvasWrapper");
 const Graph = require("./Graph");
 const SSSR = require("./SSSR");
-const ThemeManager = require("./ThemeManager");
 const Options = require("./Options");
 
 /**

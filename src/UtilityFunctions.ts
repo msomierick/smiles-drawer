@@ -3,20 +3,16 @@
  * @param {Number} charge The integer indicating the charge.
  * @returns {String} A string representing a charge.
  */
-function getChargeText(charge) {
+export function getChargeText(charge: number): string {
   if (charge === 1) {
-    return '+'
+    return "+";
   } else if (charge === 2) {
-    return '2+';
+    return "2+";
   } else if (charge === -1) {
-    return '-';
+    return "-";
   } else if (charge === -2) {
-    return '2-';
+    return "2-";
   } else {
-    return '';
+    return "";
   }
-}
-
-module.exports = {
-  getChargeText,
 }

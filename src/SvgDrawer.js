@@ -1,13 +1,13 @@
 // we use the drawer to do all the preprocessing. then we take over the drawing
 // portion to output to svg
-const ArrayHelper = require("./ArrayHelper");
-const Atom = require("./Atom");
+import { Atom } from "./Atom";
+import { ArrayHelper } from "./ArrayHelper";
+import { Vector2 } from "./Vector2";
+import { Line } from "./Line";
+import { ThemeManager } from "./ThemeManager";
+
 const DrawerBase = require("./DrawerBase");
-const Graph = require("./Graph");
-const Line = require("./Line");
 const SvgWrapper = require("./SvgWrapper");
-const ThemeManager = require("./ThemeManager");
-const Vector2 = require("./Vector2");
 const GaussDrawer = require("./GaussDrawer");
 
 class SvgDrawer {
@@ -535,6 +535,9 @@ class SvgDrawer {
    * @param {Number[]} weights The weights assigned to each atom.
    */
   drawWeights(weights, weightsNormalized) {
+    if (!weights) {
+      return;
+    }
     if (weights.every((w) => w === 0)) {
       return;
     }

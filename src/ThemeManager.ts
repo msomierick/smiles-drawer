@@ -1,5 +1,8 @@
-class ThemeManager {
-  constructor(colors, theme) {
+export class ThemeManager {
+  private colors: Record<string, Record<string, string>>;
+  private theme: Record<string, string>;
+
+  constructor(colors: Record<string, Record<string, string>>, theme: string) {
     this.colors = colors;
     this.theme = this.colors[theme];
   }
@@ -7,10 +10,10 @@ class ThemeManager {
   /**
    * Returns the hex code of a color associated with a key from the current theme.
    *
-   * @param {String} key The color key in the theme (e.g. C, N, BACKGROUND, ...).
-   * @returns {String} A color hex value.
+   * @param {string} key The color key in the theme (e.g. C, N, BACKGROUND, ...).
+   * @returns {string} A color hex value.
    */
-  getColor(key) {
+  getColor(key: string): string {
     if (key) {
       key = key.toUpperCase();
 
@@ -26,9 +29,9 @@ class ThemeManager {
    * Sets the theme to the specified string if it exists. If it does not, this
    * does nothing.
    *
-   * @param {String} theme the name of the theme to switch to
+   * @param {string} theme the name of the theme to switch to
    */
-  setTheme(theme) {
+  setTheme(theme: string): void {
     if (this.colors.hasOwnProperty(theme)) {
       this.theme = this.colors[theme];
     }
@@ -38,5 +41,3 @@ class ThemeManager {
     // on the fly
   }
 }
-
-module.exports = ThemeManager;
