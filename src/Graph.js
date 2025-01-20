@@ -2,9 +2,8 @@ import { MathHelper } from "./MathHelper"
 import { Vertex } from "./Vertex"
 import { Atom } from "./Atom"
 import { Edge } from "./Edge"
-
-const Vector2 = require('./Vector2')
-const Ring = require('./Ring')
+import { Vector2 } from "./Vector2";
+import { Ring } from "./Ring";
 
 /** 
  * A class representing the molecular graph. 
